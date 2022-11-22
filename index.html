@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <canvas id="myChart"></canvas>
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+      <script>
+
+        const queryParser = () => {
+          try{
+            const url_string = (window.location.href).toLowerCase();
+            const url = new URL(url_string);
+            const labelQuery = url.searchParams.get("label");
+            const dataQuery = url.searchParams.get("datas");
+            const title = url.searchParams.get("title");
+
+            console.log(JSON.parse(labelQuery));
+            console.log(JSON.parse(dataQuery));
+
+            let labels, datas;
+            if(labelQuery) labels = JSON.parse(labelQuery)
+            if(dataQuery) datas = JSON.parse(dataQuery)
+            return { labels, datas, title }
+          }catch(e){
+            console.log("Cannot find url string..");
+          } 
+        }
+
+        const queryObj = queryParser();
+        console.log(queryObj);
+
+        const ctx = document.getElementById('myChart');
+      
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: queryObj.labels,
+            datasets: [{
+              label: queryObj.title,
+              data: queryObj.datas,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
+       
+</body>
+</html>
